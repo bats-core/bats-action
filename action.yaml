@@ -145,7 +145,7 @@ runs:
 
         # Archlinux style, except that we are not in a fakeroot env
         # https://gitlab.archlinux.org/archlinux/packaging/packages/bash-bats/-/blob/main/PKGBUILD
-        sed -i 's|BATS_ROOT/libexec/bats-core/bats|BATS_ROOT/share/bats/bats|g' bin/bats
+        sed -i 's|BATS_ROOT/libexec/bats-core/bats|BATS_ROOT/share/bats/bats|g' bin/bats lib/bats-core/*
         sed -i 's|BATS_BASE_LIBDIR=lib|BATS_BASE_LIBDIR=share|g' bin/bats
         sed -i 's|BATS_LIBDIR/bats-core/|BATS_LIBDIR/bats/|g' libexec/bats-core/*
         sed -i 's|BATS_LIBDIR/bats-core/|BATS_LIBDIR/bats/|g' lib/bats-core/*
