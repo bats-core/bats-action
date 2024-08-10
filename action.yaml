@@ -132,14 +132,14 @@ runs:
 
         # From https://github.com/fluxcd/flux2/blob/44d69d6fc0c353e79c1bad021a4aca135033bce8/action/action.yml#L35
         if [[ -z "$VERSION" ]] || [[ "$VERSION" = "latest" ]]; then
-          VERSION=$(curl -fsSL https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
+          VERSION=$(curl -fsSL --retry 2 --retry-all-errors https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
         fi
         [[ $VERSION = v* ]] && VERSION="${VERSION:1}"
 
         mkdir -p ${TEMPDIR}
         mkdir -p ${DESTDIR}
 
-        curl -sL ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 2 --retry-all-errors ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
 
         # Install
         ./install.sh ${DESTDIR}
@@ -170,7 +170,7 @@ runs:
         mkdir -p ${TEMPDIR}
         [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
         ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
@@ -203,7 +203,7 @@ runs:
         mkdir -p ${TEMPDIR}
         [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
         ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
@@ -236,7 +236,7 @@ runs:
         mkdir -p ${TEMPDIR}
         [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         for fn in lib/*.bash; do
           ${CMD} install -Dm755 $fn \
@@ -268,7 +268,7 @@ runs:
         mkdir -p ${TEMPDIR}
         [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
         ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
