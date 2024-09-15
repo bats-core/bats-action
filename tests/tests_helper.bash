@@ -6,3 +6,19 @@ _tests_helper() {
     bats_load_library bats-file
     bats_load_library bats-detik/detik.bash
 }
+
+_create_dir_file() {
+    run mkdir testing
+    assert_success
+
+    run touch testing/example
+    assert_success
+}
+
+_delete_dir_file() {
+    run rm testing/example
+    assert_success
+
+    run rmdir testing
+    assert_success
+}
