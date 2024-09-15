@@ -30,7 +30,11 @@ setup() {
     run stat -c "%a" testing/example
   fi
   assert_success
-  assert_output 100644
+  if [[ "$(uname)" == "Darwin" ]]; then
+    assert_output 100644
+  else
+    assert_output 644
+  fi
   assert_file_permission 644 testing/example
   assert_success
 
