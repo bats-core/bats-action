@@ -163,12 +163,20 @@ runs:
       shell: bash
       run: |
         VERSION=${{ inputs.support-version }}
-        DESTDIR=${{ inputs.support-path }}
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
+        if [[ "$(uname)" == "Darwin" ]]; then
+          DESTDIR=/usr/local/bats-support
+        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+          DESTDIR=/c/Users/runneradmin/bats-support
+          CMD=""
+        else
+          DESTDIR=${{ inputs.support-path }}
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        fi
+
         mkdir -p ${TEMPDIR}
-        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
@@ -200,8 +208,17 @@ runs:
         TEMPDIR="/tmp/bats-assert"
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
 
+        if [[ "$(uname)" == "Darwin" ]]; then
+          DESTDIR=/usr/local/bats-assert
+        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+          DESTDIR=/c/Users/runneradmin/bats-assert
+          CMD=""
+        else
+          DESTDIR=${{ inputs.assert-path }}
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        fi
+
         mkdir -p ${TEMPDIR}
-        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
@@ -233,8 +250,17 @@ runs:
         TEMPDIR="/tmp/bats-detik"
         url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
 
+        if [[ "$(uname)" == "Darwin" ]]; then
+          DESTDIR=/usr/local/bats-detik
+        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+          DESTDIR=/c/Users/runneradmin/bats-detik
+          CMD=""
+        else
+          DESTDIR=${{ inputs.assert-path }}
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        fi
+
         mkdir -p ${TEMPDIR}
-        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
@@ -265,8 +291,17 @@ runs:
         TEMPDIR="/tmp/bats-file"
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
 
+        if [[ "$(uname)" == "Darwin" ]]; then
+          DESTDIR=/usr/local/bats-file
+        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+          DESTDIR=/c/Users/runneradmin/bats-file
+          CMD=""
+        else
+          DESTDIR=${{ inputs.assert-path }}
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        fi
+
         mkdir -p ${TEMPDIR}
-        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
