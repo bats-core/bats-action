@@ -70,6 +70,8 @@ jobs:
           cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.bats-lib-path }}
         shell: bash
         run:
           bats -T -p tests
@@ -133,6 +135,8 @@ jobs:
           cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.bats-lib-path }}
         shell: bash
         run:
           bats -T -p tests
