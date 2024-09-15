@@ -163,17 +163,20 @@ runs:
       shell: bash
       run: |
         VERSION=${{ inputs.support-version }}
-        TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
         if [[ "$(uname)" == "Darwin" ]]; then
           DESTDIR=/usr/local/bats-support
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+          TEMPDIR="/tmp/bats-support"
         elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
           DESTDIR=/c/Users/runneradmin/bats-support
           CMD=""
+          TEMPDIR="$HOME/AppData/Local/Temp/bats-support"
         else
           DESTDIR=${{ inputs.support-path }}
           [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+          TEMPDIR="/tmp/bats-support"
         fi
 
         mkdir -p ${TEMPDIR}
@@ -210,6 +213,7 @@ runs:
 
         if [[ "$(uname)" == "Darwin" ]]; then
           DESTDIR=/usr/local/bats-assert
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
           DESTDIR=/c/Users/runneradmin/bats-assert
           CMD=""
@@ -252,6 +256,7 @@ runs:
 
         if [[ "$(uname)" == "Darwin" ]]; then
           DESTDIR=/usr/local/bats-detik
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
           DESTDIR=/c/Users/runneradmin/bats-detik
           CMD=""
@@ -293,6 +298,7 @@ runs:
 
         if [[ "$(uname)" == "Darwin" ]]; then
           DESTDIR=/usr/local/bats-file
+          [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
         elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
           DESTDIR=/c/Users/runneradmin/bats-file
           CMD=""
