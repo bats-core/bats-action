@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-12, macos-13, macos-14 ]
+        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-12, macos-13, macos-14 ]
     runs-on: ${{ matrix.os }}
     env:
       BATS_LIB_PATH: "/usr/lib"
@@ -39,6 +39,7 @@ jobs:
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
           cd ${TMP_PATH}/bats-support/
+          echo $BATS_LIB_PATH
           bats test
       - name: Execute test to check  Bats-assert
         shell: bash
