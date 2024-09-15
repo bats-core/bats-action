@@ -97,6 +97,12 @@ outputs:
   file-installed:
     description: "True/False if bats-file has been installed"
     value: ${{ (steps.file-install.outputs.file-installed != '') }}
+  bats-lib-path:
+    description: "Bats lib path to use to load the libraries"
+    value: ${{ steps.set-paths.outputs.bats-lib-path }}
+  tmp-path:
+    description: "Bats lib path to use to load the libraries"
+    value: ${{ steps.set-paths.outputs.tmp-path }}
 
 runs:
   using: composite
@@ -169,6 +175,8 @@ runs:
         echo "DEFAULT_BASE_DIR=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
         echo "CMD=$CMD" >> $GITHUB_ENV
         echo "TEMPDIR=$TEMPDIR" >> $GITHUB_ENV
+        echo "bats-lib-path=$DEFAULT_BASE_DIR" >> $GITHUB_OUTPUT
+        echo "tmp-path=$TEMPDIR" >> $GITHUB_OUTPUT
 
     - name: "Calculate DESTDIR for Bats-support"
       if: inputs.support-install == 'true'
@@ -202,9 +210,9 @@ runs:
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          ${CMD} install -Dm755 $fn \
+          ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats Support v$VERSION installed in $DESTDIR"
@@ -243,9 +251,9 @@ runs:
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          ${CMD} install -Dm755 $fn \
+          ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats Assert v$VERSION installed in $DESTDIR"
@@ -285,7 +293,7 @@ runs:
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         for fn in lib/*.bash; do
-          ${CMD} install -Dm755 $fn \
+          ${CMD} install -m755 $fn \
              ${DESTDIR}/$(basename $fn)
         done
         echo "Bats Detik v$VERSION installed in $DESTDIR"
@@ -324,16 +332,16 @@ runs:
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          ${CMD} install -Dm755 $fn \
+          ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats File v$VERSION installed in $DESTDIR"
         echo "file-installed=true" >> $GITHUB_OUTPUT
         [[ "${{ inputs.file-clean }}" == "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
-    - name: "Debug print if installed"
+    - name: "Print info"
       shell: bash
       run: |
         echo "Bats installed: ${{ (steps.bats-install.outputs.bats-installed != '') }}"
@@ -341,3 +349,5 @@ runs:
         echo "Assert installed: ${{ (steps.assert-install.outputs.assert-installed != '') }}"
         echo "Detik installed: ${{ (steps.detik-install.outputs.detik-installed != '') }}"
         echo "File installed: ${{ (steps.file-install.outputs.file-installed != '') }}"
+        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.set-paths.outputs.bats-lib-path }}"
+        echo "Tmp path: ${{ steps.set-paths.outputs.tmp-path }}"
