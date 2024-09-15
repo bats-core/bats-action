@@ -146,7 +146,7 @@ runs:
         echo "${DESTDIR}/bin" >> "$GITHUB_PATH"
         echo "bats-installed=true" >> $GITHUB_OUTPUT
 
-        rm -rf ${TEMPDIR}
+        rm -rf ${TEMPDIR} || exit 0
 
     - name: Set paths and commands for libraries
       shell: bash
@@ -209,7 +209,7 @@ runs:
         done
         echo "Bats Support v$VERSION installed in $DESTDIR"
         echo "support-installed=true" >> $GITHUB_OUTPUT
-        [[ "${{ inputs.support-clean }}" == "true"  ]] && rm -rf ${TEMPDIR}
+        [[ "${{ inputs.support-clean }}" == "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
     - name: "Calculate DESTDIR for Bats-assert"
       if: inputs.assert-install == 'true'
@@ -250,7 +250,7 @@ runs:
         done
         echo "Bats Assert v$VERSION installed in $DESTDIR"
         echo "assert-installed=true" >> "$GITHUB_OUTPUT"
-        [[ "${{ inputs.assert-clean }}" == "true"  ]] && rm -rf ${TEMPDIR}
+        [[ "${{ inputs.assert-clean }}" == "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
     - name: "Calculate DESTDIR for Bats-detik"
       if: inputs.detik-install == 'true'
@@ -290,7 +290,7 @@ runs:
         done
         echo "Bats Detik v$VERSION installed in $DESTDIR"
         echo "detik-installed=true" >> $GITHUB_OUTPUT
-        [[ "${{ inputs.detik-clean }}" == "true"  ]] && rm -rf ${TEMPDIR}
+        [[ "${{ inputs.detik-clean }}" == "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
     - name: "Calculate DESTDIR for Bats-file"
       if: inputs.file-install == 'true'
@@ -331,7 +331,7 @@ runs:
         done
         echo "Bats File v$VERSION installed in $DESTDIR"
         echo "file-installed=true" >> $GITHUB_OUTPUT
-        [[ "${{ inputs.file-clean }}" == "true"  ]] && rm -rf ${TEMPDIR}
+        [[ "${{ inputs.file-clean }}" == "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
     - name: "Debug print if installed"
       shell: bash
