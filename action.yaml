@@ -149,6 +149,7 @@ runs:
         rm -rf ${TEMPDIR}
 
     - name: Set paths and commands for libraries
+      shell: bash
       id: set-paths
       run: |
         if [[ "$(uname)" == "Darwin" ]]; then
@@ -172,6 +173,7 @@ runs:
     - name: "Calculate DESTDIR for Bats-support"
       if: inputs.support-install == 'true'
       id: calculate-support-destdir
+      shell: bash
       run: |
         if [ -z "${{ inputs.support-path }}" ] || [ "${{ inputs.support-path }}" == "/usr/lib/bats-support" ]; then
           echo "SUPPORT_DESTDIR=${DEFAULT_BASE_DIR}/bats-support" >> $GITHUB_ENV
@@ -212,6 +214,7 @@ runs:
     - name: "Calculate DESTDIR for Bats-assert"
       if: inputs.assert-install == 'true'
       id: calculate-assert-destdir
+      shell: bash
       run: |
         if [ -z "${{ inputs.assert-path }}" ] || [ "${{ inputs.assert-path }}" == "/usr/lib/bats-assert" ]; then
           echo "ASSERT_DESTDIR=${DEFAULT_BASE_DIR}/bats-assert" >> $GITHUB_ENV
@@ -252,6 +255,7 @@ runs:
     - name: "Calculate DESTDIR for Bats-detik"
       if: inputs.detik-install == 'true'
       id: calculate-detik-destdir
+      shell: bash
       run: |
         if [ -z "${{ inputs.detik-path }}" ] || [ "${{ inputs.detik-path }}" == "/usr/lib/bats-detik" ]; then
           echo "DETIK_DESTDIR=${DEFAULT_BASE_DIR}/bats-detik" >> $GITHUB_ENV
@@ -291,6 +295,7 @@ runs:
     - name: "Calculate DESTDIR for Bats-file"
       if: inputs.file-install == 'true'
       id: calculate-file-destdir
+      shell: bash
       run: |
         if [ -z "${{ inputs.file-path }}" ] || [ "${{ inputs.file-path }}" == "/usr/lib/bats-file" ]; then
           echo "FILE_DESTDIR=${DEFAULT_BASE_DIR}/bats-file" >> $GITHUB_ENV
