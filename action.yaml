@@ -353,6 +353,7 @@ runs:
       id: info
       shell: bash
       run: |
+        echo "${bats-lib-path}"
         echo "bats-lib-path=${bats-lib-path}" >> $GITHUB_OUTPUT
         echo "Bats installed: ${{ (steps.bats-install.outputs.bats-installed != '') }}"
         echo "Support installed: ${{ (steps.support-install.outputs.support-installed != '') }}"
