@@ -14,7 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-12, macos-13, macos-14 ]
+        # Last 2 major version per each os
+        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
