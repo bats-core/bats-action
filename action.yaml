@@ -172,11 +172,11 @@ runs:
           TEMPDIR="/tmp"
         fi
 
+        echo "bats-lib-path=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
         echo "DEFAULT_BASE_DIR=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
         echo "CMD=$CMD" >> $GITHUB_ENV
         echo "TEMPDIR=$TEMPDIR" >> $GITHUB_ENV
         echo "tmp-path=$TEMPDIR" >> $GITHUB_OUTPUT
-        echo "bats-lib-path=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
 
     - name: "Calculate DESTDIR for Bats-support"
       if: inputs.support-install == 'true'
@@ -185,11 +185,10 @@ runs:
       run: |
         if [ -z "${{ inputs.support-path }}" ] || [ "${{ inputs.support-path }}" == "/usr/lib/bats-support" ]; then
           echo "SUPPORT_DESTDIR=${DEFAULT_BASE_DIR}/bats-support" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${SUPPORT_DESTDIR%/*}" >> $GITHUB_ENV
         else
           echo "SUPPORT_DESTDIR=${{ inputs.support-path }}" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${SUPPORT_DESTDIR%/*}" >> $GITHUB_ENV
         fi
+        echo "bats-lib-path=${{env.bats-lib-path}}:${SUPPORT_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-support"
       if: inputs.support-install == 'true'
@@ -228,11 +227,10 @@ runs:
       run: |
         if [ -z "${{ inputs.assert-path }}" ] || [ "${{ inputs.assert-path }}" == "/usr/lib/bats-assert" ]; then
           echo "ASSERT_DESTDIR=${DEFAULT_BASE_DIR}/bats-assert" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${ASSERT_DESTDIR%/*}" >> $GITHUB_ENV
         else
           echo "ASSERT_DESTDIR=${{ inputs.assert-path }}" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${ASSERT_DESTDIR%/*}" >> $GITHUB_ENV
         fi
+        echo "bats-lib-path=${{env.bats-lib-path}}:${ASSERT_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-assert"
       if: inputs.assert-install == 'true'
@@ -271,11 +269,10 @@ runs:
       run: |
         if [ -z "${{ inputs.detik-path }}" ] || [ "${{ inputs.detik-path }}" == "/usr/lib/bats-detik" ]; then
           echo "DETIK_DESTDIR=${DEFAULT_BASE_DIR}/bats-detik" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${DETIK_DESTDIR%/*}" >> $GITHUB_ENV
         else
           echo "DETIK_DESTDIR=${{ inputs.detik-path }}" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${DETIK_DESTDIR%/*}" >> $GITHUB_ENV
         fi
+        echo "bats-lib-path=${{bats-lib-path}}:${DETIK_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-detik"
       if: inputs.detik-install == 'true'
@@ -313,11 +310,10 @@ runs:
       run: |
         if [ -z "${{ inputs.file-path }}" ] || [ "${{ inputs.file-path }}" == "/usr/lib/bats-file" ]; then
           echo "FILE_DESTDIR=${DEFAULT_BASE_DIR}/bats-file" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${FILE_DESTDIR%/*}" >> $GITHUB_ENV
         else
           echo "FILE_DESTDIR=${{ inputs.file-path }}" >> $GITHUB_ENV
-          echo "bats-lib-path=${bats-lib-path}:${FILE_DESTDIR%/*}" >> $GITHUB_ENV
         fi
+        echo "bats-lib-path=${{bats-lib-path}}:${FILE_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-file"
       if: inputs.file-install == 'true'
@@ -353,8 +349,8 @@ runs:
       id: info
       shell: bash
       run: |
-        echo "${bats-lib-path}"
-        echo "bats-lib-path=${bats-lib-path}" >> $GITHUB_OUTPUT
+        echo "${{env.bats-lib-path}}"
+        echo "bats-lib-path=${{env.bats-lib-path}}" >> $GITHUB_OUTPUT
         echo "Bats installed: ${{ (steps.bats-install.outputs.bats-installed != '') }}"
         echo "Support installed: ${{ (steps.support-install.outputs.support-installed != '') }}"
         echo "Assert installed: ${{ (steps.assert-install.outputs.assert-installed != '') }}"
