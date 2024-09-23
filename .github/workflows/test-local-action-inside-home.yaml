@@ -14,16 +14,16 @@ jobs:
       fail-fast: false
       matrix:
         version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-    runs-on: ubuntu-latest
+        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
+    runs-on: ${{ matrix.os }}
     env:
-      BATS_LIB_PATH: "${{ github.workspace }}/tests"
       TERM: xterm
     name: local default
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Bats and Bats libs
-        id: bats-action
+        id: setup-bats
         uses: ./
         with:
           bats-version: ${{ matrix.version }}
@@ -36,23 +36,31 @@ jobs:
           file-clean: "false"
           file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
-        if: steps.bats-action.outputs.support-installed == 'true'
+        if: steps.setup-bats.outputs.support-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
           cd /tmp/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
-        if: steps.bats-action.outputs.assert-installed == 'true'
+        if: steps.setup-bats.outputs.assert-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
           ls -l $BATS_LIB_PATH/
           cd /tmp/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
-        if: steps.bats-action.outputs.detik-installed == 'true'
+        if: steps.setup-bats.outputs.detik-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
           cd /tmp/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
-        if: steps.bats-action.outputs.file-installed == 'true'
+        if: steps.setup-bats.outputs.file-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         # Currently the bats-file tests are broken
         # in gh runner env
         continue-on-error: true
@@ -60,6 +68,8 @@ jobs:
           cd /tmp/bats-file/
           bats test
       - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
           echo $PATH
           bats -T -p tests
@@ -70,16 +80,16 @@ jobs:
       fail-fast: false
       matrix:
         version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-    runs-on: ubuntu-latest
+        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
+    runs-on: ${{ matrix.os }}
     env:
-      BATS_LIB_PATH: "${{ github.workspace }}/tests"
       TERM: xterm
     name: local default cache
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Bats and Bats libs
-        id: bats-action
+        id: setup-bats
         uses: ./
         with:
           bats-version: ${{ matrix.version }}
@@ -92,22 +102,30 @@ jobs:
           file-clean: "false"
           file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
-        if: steps.bats-action.outputs.support-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+        if: steps.setup-bats.outputs.support-installed == 'true'
         run: |
           cd /tmp/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
-        if: steps.bats-action.outputs.assert-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+        if: steps.setup-bats.outputs.assert-installed == 'true'
         run: |
           cd /tmp/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
-        if: steps.bats-action.outputs.detik-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+        if: steps.setup-bats.outputs.detik-installed == 'true'
         run: |
           cd /tmp/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
-        if: steps.bats-action.outputs.file-installed == 'true'
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+        if: steps.setup-bats.outputs.file-installed == 'true'
         # Currently the bats-file tests are broken
         # in gh runner env
         continue-on-error: true
@@ -115,5 +133,7 @@ jobs:
           cd /tmp/bats-file/
           bats test
       - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run:
           bats -T -p tests

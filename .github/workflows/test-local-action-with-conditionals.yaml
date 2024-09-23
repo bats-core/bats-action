@@ -14,15 +14,16 @@ jobs:
       fail-fast: false
       matrix:
         version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-    runs-on: ubuntu-latest
+        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
+    runs-on: ${{ matrix.os }}
     env:
-      BATS_LIB_PATH: "/usr/lib"
       TERM: xterm
     name: local with options
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Bats and Bats libs
+        id: setup-bats
         uses: ./
         with:
           bats-version: ${{ matrix.version }}
@@ -31,13 +32,19 @@ jobs:
           detik-install: "true"
           file-install: "true"
       - name: Execute test to check Bats-support
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
           cd /tmp/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
           cd /tmp/bats-assert/
           bats test
       - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run:
           bats -T -p tests
