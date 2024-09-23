@@ -34,17 +34,20 @@ jobs:
       - name: Execute test to check Bats-support
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-support/
+          cd ${TMP_PATH}/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-assert/
+          cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute example tests
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run:
           bats -T -p tests

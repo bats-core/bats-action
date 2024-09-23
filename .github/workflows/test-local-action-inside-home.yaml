@@ -1,4 +1,4 @@
-name: "Test local action inside $HOME"
+name: CI
 on:
   workflow_dispatch:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
-    name: local default
+    name: local-inside-home
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,32 +39,36 @@ jobs:
         if: steps.setup-bats.outputs.support-installed == 'true'
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-support/
+          cd ${TMP_PATH}/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
         if: steps.setup-bats.outputs.assert-installed == 'true'
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-assert/
+          cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
         if: steps.setup-bats.outputs.detik-installed == 'true'
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-detik/
+          cd ${TMP_PATH}/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
         if: steps.setup-bats.outputs.file-installed == 'true'
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         # Currently the bats-file tests are broken
         # in gh runner env
         continue-on-error: true
         run: |
-          cd /tmp/bats-file/
+          cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
         env:
@@ -83,7 +87,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
-    name: local default cache
+    name: local-inside-home-cache
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -103,33 +107,37 @@ jobs:
       - name: Execute test to check Bats-support
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         if: steps.setup-bats.outputs.support-installed == 'true'
         run: |
-          cd /tmp/bats-support/
+          cd ${TMP_PATH}/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         if: steps.setup-bats.outputs.assert-installed == 'true'
         run: |
-          cd /tmp/bats-assert/
+          cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         if: steps.setup-bats.outputs.detik-installed == 'true'
         run: |
-          cd /tmp/bats-detik/
+          cd ${TMP_PATH}/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         if: steps.setup-bats.outputs.file-installed == 'true'
         # Currently the bats-file tests are broken
         # in gh runner env
         continue-on-error: true
         run: |
-          cd /tmp/bats-file/
+          cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
         env:
