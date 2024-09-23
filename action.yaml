@@ -99,7 +99,7 @@ outputs:
     value: ${{ (steps.file-install.outputs.file-installed != '') }}
   lib-path:
     description: "Bats lib path to use to load the libraries"
-    value: ${{ steps.libpath.outputs.lib-path }}
+    value: ${{ steps.libpath.outputs.libpath }}
   tmp-path:
     description: "Bats lib path to use to load the libraries"
     value: ${{ steps.set-paths.outputs.tmp-path }}
@@ -353,10 +353,7 @@ runs:
       id: libpath
       shell: bash
       run: |
-        echo "${{env._LIB_PATH}}"
-        cat /tmp/bats-lib-path
-        rm /tmp/bats-lib-path
-        echo "lib-path=$(cat /tmp/bats-lib-path)" >> $GITHUB_OUTPUT
+        echo "libpath=$SUPPORT_DESTDIR:$SUPPORT_DESTDIR:$SUPPORT_DESTDIR:$SUPPORT_DESTDIR" >> $GITHUB_OUTPUT
 
     - name: "Print info"
       id: info
@@ -367,5 +364,5 @@ runs:
         echo "Assert installed: ${{ (steps.assert-install.outputs.assert-installed != '') }}"
         echo "Detik installed: ${{ (steps.detik-install.outputs.detik-installed != '') }}"
         echo "File installed: ${{ (steps.file-install.outputs.file-installed != '') }}"
-        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.libpath.outputs.lib-path }}"
+        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.libpath.outputs.libpath }}"
         echo "Tmp path: ${{ steps.set-paths.outputs.tmp-path }}"
