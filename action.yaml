@@ -353,7 +353,7 @@ runs:
       id: libpath
       shell: bash
       run: |
-        echo "libpath=$SUPPORT_DESTDIR:$SUPPORT_DESTDIR:$SUPPORT_DESTDIR:$SUPPORT_DESTDIR" >> $GITHUB_OUTPUT
+        echo "libpath=${SUPPORT_DESTDIR%/*}:${ASSERT_DESTDIR%/*}:${DETIK_DESTDIR%/*}:${FILE_DESTDIR%/*}" >> $GITHUB_OUTPUT
 
     - name: "Print info"
       id: info
