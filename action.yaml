@@ -349,17 +349,23 @@ runs:
         echo "file-installed=true" >> $GITHUB_OUTPUT
         [[ "${{ inputs.file-clean }}" == "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
+    - name: "Set BATS_LIB_PATH"
+      id: libpath
+      shell: bash
+      run: |
+        echo "${{env._LIB_PATH}}"
+        cat /tmp/bats-lib-path
+        rm /tmp/bats-lib-path
+        echo "lib-path=$(cat /tmp/bats-lib-path)" >> $GITHUB_OUTPUT
+
     - name: "Print info"
       id: info
       shell: bash
       run: |
-        echo "${{env._LIB_PATH}}"
-        echo "lib-path=$(cat /tmp/bats-lib-path)" >> $GITHUB_OUTPUT
-        rm /tmp/bats-lib-path
         echo "Bats installed: ${{ (steps.bats-install.outputs.bats-installed != '') }}"
         echo "Support installed: ${{ (steps.support-install.outputs.support-installed != '') }}"
         echo "Assert installed: ${{ (steps.assert-install.outputs.assert-installed != '') }}"
         echo "Detik installed: ${{ (steps.detik-install.outputs.detik-installed != '') }}"
         echo "File installed: ${{ (steps.file-install.outputs.file-installed != '') }}"
-        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.info.outputs.lib-path }}"
+        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.libpath.outputs.lib-path }}"
         echo "Tmp path: ${{ steps.set-paths.outputs.tmp-path }}"
