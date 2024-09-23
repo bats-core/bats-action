@@ -1,4 +1,4 @@
-name: "Test local with conditionals"
+name: CI
 on:
   workflow_dispatch:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
-    name: local with options
+    name: local-options
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +32,7 @@ jobs:
           detik-install: "true"
           file-install: "true"
       - name: Execute test to check Bats-support
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -39,6 +40,7 @@ jobs:
           cd ${TMP_PATH}/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -46,6 +48,7 @@ jobs:
           cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute example tests
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}

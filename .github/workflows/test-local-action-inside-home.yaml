@@ -37,6 +37,7 @@ jobs:
           file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
         if: steps.setup-bats.outputs.support-installed == 'true'
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -45,6 +46,7 @@ jobs:
           bats test
       - name: Execute test to check  Bats-assert
         if: steps.setup-bats.outputs.assert-installed == 'true'
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -53,6 +55,7 @@ jobs:
           bats test
       - name: Execute test to check Bats-detik
         if: steps.setup-bats.outputs.detik-installed == 'true'
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -61,6 +64,7 @@ jobs:
           bats tests
       - name: Execute test to check Bats-file
         if: steps.setup-bats.outputs.file-installed == 'true'
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -71,6 +75,7 @@ jobs:
           cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run: |
@@ -105,6 +110,7 @@ jobs:
           file-clean: "false"
           file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -113,6 +119,7 @@ jobs:
           cd ${TMP_PATH}/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -121,6 +128,7 @@ jobs:
           cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -129,6 +137,7 @@ jobs:
           cd ${TMP_PATH}/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
@@ -140,6 +149,7 @@ jobs:
           cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
+        shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
         run:
