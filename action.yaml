@@ -97,9 +97,9 @@ outputs:
   file-installed:
     description: "True/False if bats-file has been installed"
     value: ${{ (steps.file-install.outputs.file-installed != '') }}
-  bats-lib-path:
+  lib-path:
     description: "Bats lib path to use to load the libraries"
-    value: ${{ steps.info.outputs.bats-lib-path }}
+    value: ${{ steps.info.outputs.lib-path }}
   tmp-path:
     description: "Bats lib path to use to load the libraries"
     value: ${{ steps.set-paths.outputs.tmp-path }}
@@ -172,7 +172,7 @@ runs:
           TEMPDIR="/tmp"
         fi
 
-        echo "bats-lib-path=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
+        echo "_LIB_PATH=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
         echo "DEFAULT_BASE_DIR=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
         echo "CMD=$CMD" >> $GITHUB_ENV
         echo "TEMPDIR=$TEMPDIR" >> $GITHUB_ENV
@@ -188,8 +188,8 @@ runs:
         else
           echo "SUPPORT_DESTDIR=${{ inputs.support-path }}" >> $GITHUB_ENV
         fi
-        echo ${bats-lib-path}
-        echo "bats-lib-path=${bats-lib-path}:${SUPPORT_DESTDIR%/*}" >> $GITHUB_ENV
+        echo ${_LIB_PATH}
+        echo "_LIB_PATH=${_LIB_PATH}:${SUPPORT_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-support"
       if: inputs.support-install == 'true'
@@ -231,8 +231,8 @@ runs:
         else
           echo "ASSERT_DESTDIR=${{ inputs.assert-path }}" >> $GITHUB_ENV
         fi
-        echo ${bats-lib-path}
-        echo "bats-lib-path=${bats-lib-path}:${ASSERT_DESTDIR%/*}" >> $GITHUB_ENV
+        echo ${_LIB_PATH}
+        echo "_LIB_PATH=${_LIB_PATH}:${ASSERT_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-assert"
       if: inputs.assert-install == 'true'
@@ -274,8 +274,8 @@ runs:
         else
           echo "DETIK_DESTDIR=${{ inputs.detik-path }}" >> $GITHUB_ENV
         fi
-        echo $bats-lib-path
-        echo "bats-lib-path=${bats-lib-path}:${DETIK_DESTDIR%/*}" >> $GITHUB_ENV
+        echo $_LIB_PATH
+        echo "_LIB_PATH=${_LIB_PATH}:${DETIK_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-detik"
       if: inputs.detik-install == 'true'
@@ -316,8 +316,8 @@ runs:
         else
           echo "FILE_DESTDIR=${{ inputs.file-path }}" >> $GITHUB_ENV
         fi
-        echo $bats-lib-path
-        echo "bats-lib-path=${bats-lib-path}:${FILE_DESTDIR%/*}" >> $GITHUB_ENV
+        echo $_LIB_PATH
+        echo "_LIB_PATH=${_LIB_PATH}:${FILE_DESTDIR%/*}" >> $GITHUB_ENV
 
     - name: "Set cache for Bats-file"
       if: inputs.file-install == 'true'
@@ -353,12 +353,12 @@ runs:
       id: info
       shell: bash
       run: |
-        echo "${{env.bats-lib-path}}"
-        echo "bats-lib-path=${{env.bats-lib-path}}" >> $GITHUB_OUTPUT
+        echo "${{env._LIB_PATH}}"
+        echo "lib-path=${_LIB_PATH}" >> $GITHUB_OUTPUT
         echo "Bats installed: ${{ (steps.bats-install.outputs.bats-installed != '') }}"
         echo "Support installed: ${{ (steps.support-install.outputs.support-installed != '') }}"
         echo "Assert installed: ${{ (steps.assert-install.outputs.assert-installed != '') }}"
         echo "Detik installed: ${{ (steps.detik-install.outputs.detik-installed != '') }}"
         echo "File installed: ${{ (steps.file-install.outputs.file-installed != '') }}"
-        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.info.outputs.bats-lib-path }}"
+        echo "Bats lib to use in BATS_LIB_PATH env ${{ steps.info.outputs.lib-path }}"
         echo "Tmp path: ${{ steps.set-paths.outputs.tmp-path }}"
