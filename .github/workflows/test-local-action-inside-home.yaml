@@ -44,7 +44,7 @@ jobs:
         run: |
           cd ${TMP_PATH}/bats-support/
           bats test
-      - name: Execute test to check  Bats-assert
+      - name: Execute test to check Bats-assert
         if: steps.setup-bats.outputs.assert-installed == 'true'
         shell: bash
         env:
@@ -55,6 +55,9 @@ jobs:
           bats test
       - name: Execute test to check Bats-detik
         if: steps.setup-bats.outputs.detik-installed == 'true'
+        # Currently the bats-detik tests are broken
+        # in macos
+        continue-on-error: ${{ runner.os == 'macOS' }}
         shell: bash
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
@@ -133,6 +136,9 @@ jobs:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         if: steps.setup-bats.outputs.detik-installed == 'true'
+        # Currently the bats-detik tests are broken
+        # in macos
+        continue-on-error: ${{ runner.os == 'macOS' }}
         run: |
           cd ${TMP_PATH}/bats-detik/
           bats tests

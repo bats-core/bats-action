@@ -158,11 +158,11 @@ runs:
       shell: bash
       id: set-paths
       run: |
-        if [[ "$(uname)" == "Darwin" ]]; then
+        if [[ "$RUNNER_OS" == "macOS" ]]; then
           DEFAULT_BASE_DIR="/usr/local/lib"
           [[ "${DEFAULT_BASE_DIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
           TEMPDIR="/tmp"
-        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
           DEFAULT_BASE_DIR="/c/Users/runneradmin"
           CMD=""
           TEMPDIR="$HOME/AppData/Local/Temp"
@@ -345,7 +345,12 @@ runs:
       id: libpath
       shell: bash
       run: |
-        echo "libpath=${SUPPORT_DESTDIR%/*}:${ASSERT_DESTDIR%/*}:${DETIK_DESTDIR%/*}:${FILE_DESTDIR%/*}" >> $GITHUB_OUTPUT
+        LIB_PATH="${SUPPORT_DESTDIR%/*}:${ASSERT_DESTDIR%/*}:${DETIK_DESTDIR%/*}:${FILE_DESTDIR%/*}"
+        if [[ "$RUNNER_OS" == "Windows" ]]; then
+          LIB_PATH=$(echo $LIB_PATH | tr '\\' '/')
+        fi
+        echo "libpath=$LIB_PATH" >> $GITHUB_OUTPUT
+
 
     - name: "Print info"
       id: info
