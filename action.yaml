@@ -109,7 +109,7 @@ runs:
       with:
         path: |
           ~/.local/share/bats
-        key: ${{ runner.os }}-bats-${{ inputs.bats-version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-bats-${{ inputs.bats-version }}
 
     - name: "Set PATH in case of cache-hit"
       if: inputs.bats-install == 'true' && steps.bats-cache.outputs.cache-hit == 'true'
@@ -155,7 +155,7 @@ runs:
       id: support-cache
       with:
         path: ${{ inputs.support-path }}
-        key: ${{ runner.os }}-bats-support-${{ inputs.support-version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-bats-support-${{ inputs.support-version }}
 
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
@@ -188,7 +188,7 @@ runs:
       id: assert-cache
       with:
         path: ${{ inputs.assert-path }}
-        key: ${{ runner.os }}-bats-assert-${{ inputs.assert-version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-bats-assert-${{ inputs.assert-version }}
 
     - name: "Download and install Bats-assert"
       if: inputs.assert-install == 'true' && steps.assert-cache.outputs.cache-hit != 'true'
@@ -221,7 +221,7 @@ runs:
       id: detik-cache
       with:
         path: ${{ inputs.detik-path }}
-        key: ${{ runner.os }}-bats-detik-${{ inputs.detik-version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-bats-detik-${{ inputs.detik-version }}
 
     - name: "Download and install Bats-detik"
       if: inputs.detik-install == 'true' && steps.detik-cache.outputs.cache-hit != 'true'
@@ -253,7 +253,7 @@ runs:
       id: file-cache
       with:
         path: ${{ inputs.file-path }}
-        key: ${{ runner.os }}-bats-file-${{ inputs.file-version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-bats-file-${{ inputs.file-version }}
 
     - name: "Download and install Bats-file"
       if: inputs.file-install == 'true' && steps.file-cache.outputs.cache-hit != 'true'
