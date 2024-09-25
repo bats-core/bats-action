@@ -349,9 +349,9 @@ runs:
         # in case of win we need to remove the
         # wrong slashes and translate drive-letter: like D:
         # to /d/
-        if [[ "$RUNNER_OS" == "Windows" ]]; then
-          LIB_PATH=$(echo $LIB_PATH | tr '\\' '/'| sed -E 's#([A-Za-z]):#/\\L\1#g')
-        fi
+        #if [[ "$RUNNER_OS" == "Windows" ]]; then
+        #  LIB_PATH=$(echo $LIB_PATH | tr '\\' '/'| sed -E 's#([A-Za-z]):#/\\L\1#g')
+        #fi
         echo "libpath=$LIB_PATH" >> $GITHUB_OUTPUT
 
 
