@@ -211,7 +211,7 @@ runs:
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
-        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
@@ -253,7 +253,7 @@ runs:
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
-        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
@@ -336,7 +336,7 @@ runs:
         ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
-        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
