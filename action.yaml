@@ -137,15 +137,15 @@ runs:
         URL="https://github.com/bats-core/bats-core/"
 
         # From https://github.com/fluxcd/flux2/blob/44d69d6fc0c353e79c1bad021a4aca135033bce8/action/action.yml#L35
-        if [[ -z "$VERSION" ]] || [[ "$VERSION" == "latest" ]]; then
-          VERSION=$(curl -fsSL --retry 2 --retry-all-errors https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
+        if [[ -z "$VERSION" ]] || [[ "$VERSION" = "latest" ]]; then
+          VERSION=$(curl -fsSL --retry 4 --retry-connrefused https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
         fi
         [[ $VERSION == v* ]] && VERSION="${VERSION:1}"
 
         mkdir -p ${TEMPDIR}
         mkdir -p ${DESTDIR}
 
-        curl -sL --retry 2 --retry-all-errors ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 4 --retry-connrefused ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
 
         ./install.sh ${DESTDIR}
         echo "Bats v${VERSION} installed in ${DESTDIR}"
@@ -209,8 +209,9 @@ runs:
 
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
+        curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env
+        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
@@ -250,8 +251,9 @@ runs:
 
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
+        curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env
+        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
@@ -291,7 +293,8 @@ runs:
 
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         for fn in lib/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/$(basename $fn)
@@ -331,8 +334,9 @@ runs:
 
         mkdir -p ${TEMPDIR}
         ${CMD} mkdir -p ${DESTDIR}/src/
-        curl -sL --retry 2 --retry-all-errors ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        ${CMD} install -m755 load.bash ${DESTDIR}/load.bash
+        curl -sL --retry 4 --retry-connrefused ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env
+        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           ${CMD} install -m755 $fn \
              ${DESTDIR}/src/$(basename $fn)
