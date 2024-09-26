@@ -345,12 +345,23 @@ runs:
       id: libpath
       shell: bash
       run: |
-        LIB_PATH="${SUPPORT_DESTDIR%/*}:${ASSERT_DESTDIR%/*}:${DETIK_DESTDIR%/*}:${FILE_DESTDIR%/*}"
-        # in case of win we need to remove the
-        # wrong slashes and translate drive-letter: like D:
-        # to /d/
+        # In case of windows if the path passed
+        # as github workspace could be something like
+        # D:\a\bats-action\bats-action/tests
+        # so we need to translate D: into /d/
+        # and replace the wrong slash
+        winfix() {
+          local winpath="$1"
+          echo "$winpath" | sed 's|\\|/|g' | sed 's|^\([A-Za-z]\):|/\L\1|'
+        }
         if [[ "$RUNNER_OS" == "Windows" ]]; then
-          LIB_PATH=$(echo $LIB_PATH | tr '\\' '/'| sed -E 's#([A-Za-z]):#/\\L\1#g')
+          S="$(winfix ${SUPPORT_DESTDIR%/*})"
+          A="$(winfix ${ASSERT_DESTDIR%/*})"
+          D="$(winfix ${DETIK_DESTDIR%/*})"
+          F="$(winfix ${FILE_DESTDIR%/*})"
+          LIB_PATH="${S}:${A}:${D}:${F}"
+        else
+          LIB_PATH="${SUPPORT_DESTDIR%/*}:${ASSERT_DESTDIR%/*}:${DETIK_DESTDIR%/*}:${FILE_DESTDIR%/*}"
         fi
         echo "libpath=$LIB_PATH" >> $GITHUB_OUTPUT
 
