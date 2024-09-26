@@ -101,7 +101,7 @@ outputs:
     description: "Bats lib path to use to load the libraries"
     value: ${{ steps.libpath.outputs.libpath }}
   tmp-path:
-    description: "Bats lib path to use to load the libraries"
+    description: "Temporary path with each library tests"
     value: ${{ steps.set-paths.outputs.tmp-path }}
 
 runs:
