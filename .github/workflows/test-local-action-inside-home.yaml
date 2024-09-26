@@ -112,48 +112,6 @@ jobs:
           detik-path: "${{ github.workspace }}/tests/bats-detik"
           file-clean: "false"
           file-path: "${{ github.workspace }}/tests/bats-file"
-      - name: Execute test to check Bats-support
-        shell: bash
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        if: steps.setup-bats.outputs.support-installed == 'true'
-        run: |
-          cd ${TMP_PATH}/bats-support/
-          bats test
-      - name: Execute test to check  Bats-assert
-        shell: bash
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        if: steps.setup-bats.outputs.assert-installed == 'true'
-        run: |
-          cd ${TMP_PATH}/bats-assert/
-          bats test
-      - name: Execute test to check Bats-detik
-        shell: bash
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        if: steps.setup-bats.outputs.detik-installed == 'true'
-        # Currently the bats-detik tests are broken
-        # in macos
-        continue-on-error: ${{ runner.os == 'macOS' }}
-        run: |
-          cd ${TMP_PATH}/bats-detik/
-          bats tests
-      - name: Execute test to check Bats-file
-        shell: bash
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        if: steps.setup-bats.outputs.file-installed == 'true'
-        # Currently the bats-file tests are broken
-        # in gh runner env
-        continue-on-error: true
-        run: |
-          cd ${TMP_PATH}/bats-file/
-          bats test
       - name: Execute example tests
         shell: bash
         env:

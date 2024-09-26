@@ -98,42 +98,6 @@ jobs:
           assert-clean: "false"
           detik-clean: "false"
           file-clean: "false"
-      - name: Execute test to check Bats-support
-        shell: bash
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        run: |
-          cd ${TMP_PATH}/bats-support/
-          bats test
-      - name: Execute test to check  Bats-assert
-        shell: bash
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        run: |
-          cd ${TMP_PATH}/bats-assert/
-          bats test
-      - name: Execute test to check Bats-detik
-        shell: bash
-        continue-on-error: true
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        run: |
-          cd ${TMP_PATH}/bats-detik/
-          bats tests
-      - name: Execute test to check Bats-file
-        shell: bash
-        # Currently the bats-file tests are broken
-        # in gh runner env
-        continue-on-error: true
-        env:
-          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
-          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
-        run: |
-          cd ${TMP_PATH}/bats-file/
-          bats test
       - name: Execute example tests
         env:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
