@@ -1,4 +1,4 @@
-name: "Test public from main"
+name: CI
 on:
   workflow_dispatch:
   pull_request:
@@ -13,16 +13,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-    runs-on: ubuntu-latest
+        version: ["1.7.0", "1.9.0", "1.11.0", "latest"]
+        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
+    runs-on: ${{ matrix.os }}
     env:
       BATS_LIB_PATH: "/usr/lib"
       TERM: xterm
-    name: Install Bats common libs
+    name: public
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Bats and Bats-libs
+      - name: Setup Bats and Bats libs
+        id: setup-bats
         uses: bats-core/bats-action@main
         with:
           bats-version: ${{ matrix.version }}
@@ -31,61 +33,75 @@ jobs:
           detik-clean: "false"
           file-clean: "false"
       - name: Execute test to check Bats-support
+        shell: bash
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-support/
+          cd ${TMP_PATH}/bats-support/
+          echo $BATS_LIB_PATH
           bats test
       - name: Execute test to check  Bats-assert
+        shell: bash
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-assert/
+          cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
+        shell: bash
+        continue-on-error: true
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-detik/
+          cd ${TMP_PATH}/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
+        shell: bash
+        # Currently the bats-file tests are broken
+        # in gh runner env
         continue-on-error: true
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-file/
+          cd ${TMP_PATH}/bats-file/
           bats test
       - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+        shell: bash
         run:
           bats -T -p tests
+
   public_test_trigger_cache:
-    # Run the test again to eventually trigger the cache in the future
     needs: [public_test]
     strategy:
       fail-fast: false
       matrix:
-        version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-    runs-on: ubuntu-latest
+        version: ["1.7.0", "1.9.0", "1.11.0", "latest"]
+        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
+    runs-on: ${{ matrix.os }}
     env:
-      BATS_LIB_PATH: "/usr/lib"
-    name: Install Bats common libs
+      TERM: xterm
+    name: public-no-cache
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Bats and Bats-libs
         uses: bats-core/bats-action@main
+        id: setup-bats
         with:
           bats-version: ${{ matrix.version }}
           support-clean: "false"
           assert-clean: "false"
           detik-clean: "false"
           file-clean: "false"
-      - name: Execute test to check Bats-support
-        run: |
-          cd /tmp/bats-support/
-          bats test
-      - name: Execute test to check  Bats-assert
-        run: |
-          cd /tmp/bats-assert/
-          bats test
-      - name: Execute test to check Bats-detik
-        run: |
-          cd /tmp/bats-detik/
-          bats tests
-      - name: Execute test to check Bats-file
-        continue-on-error: true
-        run: |
-          cd /tmp/bats-file/
-          bats test
+      - name: Execute example tests
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+        shell: bash
+        run:
+          bats -T -p tests

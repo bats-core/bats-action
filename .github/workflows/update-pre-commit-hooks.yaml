@@ -1,4 +1,4 @@
-name: update-pre-commit-hooks
+name: CI
 
 on:
   workflow_dispatch:
