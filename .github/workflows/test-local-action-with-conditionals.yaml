@@ -1,4 +1,4 @@
-name: "Test local with conditionals"
+name: CI
 on:
   workflow_dispatch:
   pull_request:
@@ -13,16 +13,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["1.7.0", "1.8.2", "1.9.0", "1.10.0", "1.11.0", "latest"]
-    runs-on: ubuntu-latest
+        version: ["1.7.0", "1.9.0", "1.11.0", "latest"]
+        os: [ ubuntu-22.04, ubuntu-latest, windows-2022, windows-latest, macos-14, macos-latest ]
+    runs-on: ${{ matrix.os }}
     env:
-      BATS_LIB_PATH: "/usr/lib"
       TERM: xterm
-    name: local with options
+    name: local-options
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Bats and Bats libs
+        id: setup-bats
         uses: ./
         with:
           bats-version: ${{ matrix.version }}
@@ -31,13 +32,25 @@ jobs:
           detik-install: "true"
           file-install: "true"
       - name: Execute test to check Bats-support
+        shell: bash
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-support/
+          cd ${TMP_PATH}/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
+        shell: bash
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run: |
-          cd /tmp/bats-assert/
+          cd ${TMP_PATH}/bats-assert/
           bats test
       - name: Execute example tests
+        shell: bash
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TMP_PATH: ${{ steps.setup-bats.outputs.tmp-path }}
         run:
           bats -T -p tests
