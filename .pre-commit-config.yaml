@@ -1,10 +1,10 @@
 repos:
   - repo: https://github.com/sirosen/check-jsonschema
-    rev: 0.28.4
+    rev: 0.29.3
     hooks:
       - id: check-github-workflows
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: detect-private-key
       - id: trailing-whitespace
