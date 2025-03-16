@@ -9,3 +9,8 @@ repos:
       - id: detect-private-key
       - id: trailing-whitespace
       - id: end-of-file-fixer
+  - repo: https://github.com/brokenpip3/pre-commit-hooks
+    rev: dd7b3821637ba3c3a8628ad487fd84edec8006f2  # frozen: 0.0.1
+    hooks:
+      - id: github-actions-hash
+        files: \.(yml|yaml)$
