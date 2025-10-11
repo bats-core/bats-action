@@ -21,10 +21,10 @@ jobs:
      name: Install Bats and bats libs
      steps:
        - name: Checkout
-         uses: actions/checkout@v2
+         uses: actions/checkout@v5
        - name: Setup Bats and bats libs
          id: setup-bats
-         uses: bats-core/bats-action@3.0.0
+         uses: bats-core/bats-action@3.0.1
        - name: My test
          shell: bash
          env:
@@ -57,7 +57,7 @@ For example, if you want to install `bats-support` in the `./test/bats-support` 
       [...]
        - name: Setup Bats and Bats libs
          id: setup-bats
-         uses: bats-core/bats-action@2.0.0
+         uses: bats-core/bats-action@3.0.1
          with:
            support-path: ${{ github.workspace }}/test/bats-support
       [...]
@@ -74,7 +74,7 @@ For instance this is an example that will use the github workspace handle (works
       [...]
        - name: Setup Bats and bats libs
          id: setup-bats
-         uses: bats-core/bats-action@3.0.0
+         uses: bats-core/bats-action@3.0.1
          with:
            support-path: "${{ github.workspace }}/tests/bats-support"
            assert-path: "${{ github.workspace }}/tests/bats-assert"
