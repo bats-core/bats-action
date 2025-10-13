@@ -142,14 +142,14 @@ runs:
 
         # From https://github.com/fluxcd/flux2/blob/44d69d6fc0c353e79c1bad021a4aca135033bce8/action/action.yml#L35
         if [[ -z "$VERSION" ]] || [[ "$VERSION" = "latest" ]]; then
-          VERSION=$(curl -fsSL --retry 4 --retry-connrefused -H "Authorization: token ${{ inputs.github-token }}" https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
+          VERSION=$(curl -fsSL --retry 4 --retry-connrefused -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
         fi
         [[ $VERSION == v* ]] && VERSION="${VERSION:1}"
 
         mkdir -p ${TEMPDIR}
         mkdir -p ${DESTDIR}
 
-        curl -sL --retry 4 --retry-connrefused -H "Authorization: token ${{ inputs.github-token }}" ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL --retry 4 --retry-connrefused -H "Authorization: token $GITHUB_TOKEN" ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
 
         ./install.sh ${DESTDIR}
         echo "Bats v${VERSION} installed in ${DESTDIR}"
@@ -157,6 +157,8 @@ runs:
         echo "bats-installed=true" >> $GITHUB_OUTPUT
 
         rm -rf ${TEMPDIR} || exit 0
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Set paths and commands for libraries
       shell: bash
