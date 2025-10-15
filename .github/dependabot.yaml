@@ -6,3 +6,7 @@ updates:
       interval: "daily"
     target-branch: main
     assignees: ["brokenpip3"]
+    groups:
+      actions:
+        patterns:
+          - "*"
