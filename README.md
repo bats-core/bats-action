@@ -63,6 +63,23 @@ For example, if you want to install `bats-support` in the `./test/bats-support` 
       [...]
 ```
 
+## Authenticated requests
+
+The action performs a number of calls against github API URLs to discover bats release numbers and download assets. To help against github rate limits, you can pass a valid github token so that those requests are authenticated. Example:
+
+``` yaml
+      [...]
+       - name: Setup Bats and Bats libs
+         id: setup-bats
+         uses: bats-core/bats-action@3.0.1
+         with:
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+      [...]
+```
+
+If you don't have a token (for example, because you're using this action in a non-github pipeline), you can omit the token and things shoud work just fine, however you'll be slightly more likely to run into github rate limits, so keep this in mind if you encounter problems.
+
+
 ## About Caching
 
 The caching mechanism for the `bats binary` is always available. However, the caching for the `bats libraries` is dependent on the location of each library path. If a library is located within the $HOME directory, caching is supported. Conversely, if a library is located outside the $HOME directory (which is the default location per each library), caching is not supported. This is due to a known limitation with sudo and the cache action, as detailed in this GitHub issue: https://github.com/actions/toolkit/issues/946.
