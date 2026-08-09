@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/sirosen/check-jsonschema
-    rev: b035497fb64e3f9faa91e833331688cc185891e6  # frozen: 0.36.0
+    rev: c4654a7e007c9619a5eb63c39a456572a0fa1851  # frozen: 0.38.0
     hooks:
       - id: check-github-workflows
   - repo: https://github.com/pre-commit/pre-commit-hooks
