@@ -4,27 +4,22 @@ set -eu
 repo="${1:?Usage: $0 <repo> <version> <sha256> <target-directory>}"
 version="${2:?Usage: $0 <repo> <version> <sha256> <target-directory>}"
 expected_sha256="${3:?Usage: $0 <repo> <version> <sha256> <target-directory>}"
-tempdir="${4:?Usage: $0 <repo> <version> <sha256> <target-directory>}"
+target_dir="${4:?Usage: $0 <repo> <version> <sha256> <target-directory>}"
 
 url="https://github.com/${repo}/archive/refs/tags/v${version}.tar.gz"
-archive="${tempdir}.tar.gz"
+archive="${target_dir}.tar.gz"
 
-declare -a curl_args=(
-  --fail
-  --silent
-  --show-error
-  --location
-  --retry 4
-  --retry-connrefused
-)
-
-if [ -n "${GITHUB_TOKEN:-}" ]; then
-  curl_args+=(--header "Authorization: Bearer $GITHUB_TOKEN")
-fi
-
-echo "Downloading $url to $tempdir" >&2
+echo "Downloading $url to $target_dir" >&2
 mkdir -p "$(dirname "$archive")"
-curl "${curl_args[@]}" --output "$archive" "$url"
+curl \
+  --fail \
+  --silent \
+  --show-error \
+  --location \
+  --retry 4 \
+  --retry-connrefused \
+  --output "$archive" \
+  "$url"
 
 if command -v sha256sum >/dev/null; then
   actual_sha256="$(sha256sum "$archive")"
@@ -45,8 +40,8 @@ if [ "$actual_sha256" != "$expected_sha256" ]; then
   exit 1
 fi
 
-mkdir -p "$tempdir"
-tar xzf "$archive" -C "$tempdir" --strip-components 1
+mkdir -p "$target_dir"
+tar xzf "$archive" -C "$target_dir" --strip-components 1
 rm -f "$archive"
 
-echo "${repo} v${version} downloaded to ${tempdir}" >&2
+echo "${repo} v${version} downloaded to ${target_dir}" >&2
