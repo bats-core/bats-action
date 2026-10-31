@@ -183,6 +183,11 @@ runs:
           TEMPDIR="/tmp"
         fi
 
+        # If we are already root, there is no need for sudo
+        if (( UID == 0 )) && [[ "$CMD" == sudo ]]; then
+          CMD=""
+        fi
+
         echo "_LIB_PATH=$DEFAULT_BASE_DIR" >> /tmp/bats-lib-path
         echo "DEFAULT_BASE_DIR=$DEFAULT_BASE_DIR" >> $GITHUB_ENV
         echo "CMD=$CMD" >> $GITHUB_ENV
