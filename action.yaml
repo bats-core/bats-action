@@ -38,7 +38,7 @@ inputs:
   assert-version:
     description: "Bats-assert version, default to latest"
     required: false
-    default: "2.1.0"
+    default: "2.2.4"
   assert-path:
     description: "Bats-assert path, default to /usr/lib/bats-assert"
     required: false
@@ -143,7 +143,7 @@ runs:
         declare -a AUTH_ARGS=()
         if [ "$GITHUB_TOKEN" != "" ]; then
           AUTH_ARGS=( -H "Authorization: token $GITHUB_TOKEN" )
-        fi 
+        fi
 
         # From https://github.com/fluxcd/flux2/blob/44d69d6fc0c353e79c1bad021a4aca135033bce8/action/action.yml#L35
         if [[ -z "$VERSION" ]] || [[ "$VERSION" = "latest" ]]; then

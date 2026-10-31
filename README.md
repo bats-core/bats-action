@@ -122,7 +122,7 @@ Please report any issue.
 | support-path     | `/usr/lib/bats-support` | false | Bats-support path |
 | support-clean    | `true`    | false    | Bats-support: clean temp files                  |
 | assert-install   | `true`    | false    | Bats-assert installation      |
-| assert-version   | `2.1.0`   | false    | Bats-assert version         |
+| assert-version   | `2.2.4`   | false    | Bats-assert version         |
 | assert-path      | `/usr/lib/bats-assert` | false | Bats-assert path |
 | assert-clean     | `true`    | false    | Bats-assert: clean temp files                   |
 | detik-install    | `true`   | false    | Bats-detik installation        |
